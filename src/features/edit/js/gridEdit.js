@@ -782,14 +782,6 @@
               if (!inEdit) {
                 return;
               }
-              
-              //sometimes the events can't keep up with the keyboard and grid focus is lost, so always focus
-              //back to grid here. The focus call needs to be before the $destroy and removal of the control,
-              //otherwise ng-model-options of UpdateOn: 'blur' will not work.
-              if (uiGridCtrl && uiGridCtrl.grid.api.cellNav) {
-                uiGridCtrl.focus();
-              }
-              
               var gridCellContentsEl = angular.element($elm.children()[0]);
               //remove edit element
               editCellScope.$destroy();
@@ -798,6 +790,11 @@
               inEdit = false;
               registerBeginEditEvents();
               $scope.grid.api.core.notifyDataChange( uiGridConstants.dataChange.EDIT );
+              //sometimes the events can't keep up with the keyboard and grid focus is lost, so always focus
+              //back to grid here
+              if (uiGridCtrl && uiGridCtrl.grid.api.cellNav) {
+                uiGridCtrl.focus();
+              }
             }
 
             function cancelEdit() {
